@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void parseJSON() {
-        final String url = "http://192.168.1.61/api/v1/schedule_list";
+        final String url = "http://192.168.1.61/api/v1/attendance_list";
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
@@ -72,22 +72,6 @@ public class MainActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-//                        JSONArray jsonArray = response.getJSONArray();
-//
-//                        for (int i = 0; i < jsonArray.length(); i++) {
-//                            JSONObject hit = jsonArray.getJSONObject(i);
-//
-//                            int id = hit.getInt("id");
-//                            Log.d(LOG_TAG, String.valueOf(id));
-////                            String imageUrl = hit.getString("webFormatURL");
-////                            int likeCount = hit.getInt("likes");
-//
-//                            mExampleList.add(new ExampleItem(id));
-//                        }
-//
-//                        mExampleAdapter = new ExampleAdapter(MainActivity.this, mExampleList);
-//                        mRecyclerView.setAdapter(mExampleAdapter);
                     }
                 },
                 new Response.ErrorListener() {
