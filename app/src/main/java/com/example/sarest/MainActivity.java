@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void parseJSON() {
-        final String url = "http://192.168.1.61/api/v1/attendance_list";
+        final String url = "https://jmillennial.pythonanywhere.com/api/v1/schedule_list";
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
