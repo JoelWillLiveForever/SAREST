@@ -47,9 +47,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void parseJSON() {
-        final String url = "https://jmillennial.pythonanywhere.com/api/v1/schedule_list";
+        final String urlTeacher = "http://10.0.2.2:8000/api/v1/teacher_list";
+        final String urlSubject = "http://10.0.2.2:8000/api/v1/subject_list";
+        final String urlTeacherSubj = "http://10.0.2.2:8000/api/v1/teacher_subj_list";
+        final String urlCriterion = "http://10.0.2.2:8000/api/v1/criterion_list";
+        final String urlSubjectGroup = "http://10.0.2.2:8000/api/v1/subject_group_list";
+        final String urlGrade = "http://10.0.2.2:8000/api/v1/grade_list";
+        final String urlGroup = "http://10.0.2.2:8000/api/v1/group_list";
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, urlTeacher, null,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
