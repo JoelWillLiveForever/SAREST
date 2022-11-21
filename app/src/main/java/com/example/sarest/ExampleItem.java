@@ -4,7 +4,7 @@ public class ExampleItem {
 //    private String mImageuUrl;
 //    private String mCreator;
 //    private int mLikes;
-    private int id;
+    public int id;
 
     public ExampleItem(int id) {
         this.id = id;
