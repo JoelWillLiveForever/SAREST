@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Criterion> mCriterionList;
     private ArrayList<Grade> mGradeList;
     private ArrayList<Group> mGroupList;
-    private ArrayList<Subject> mSubjeёctList;
+    private ArrayList<Subject> mSubjectList;
     private ArrayList<Subject_Group> mSubjectGroupList;
     private ArrayList<Teacher> mTeacherList;
     private ArrayList<Teacher_Subject> mTeacherSubjectList;
@@ -51,24 +51,76 @@ public class MainActivity extends AppCompatActivity {
 //         mExampleList = new ArrayList<>();
         mRequestQueue = Volley.newRequestQueue(MainActivity.this);
 
+        mUserList = new ArrayList<>();
         mTeacherList = new ArrayList<>();
+        mSubjectList = new ArrayList<>();
+        mTeacherSubjectList = new ArrayList<>();
+        mSubjectGroupList = new ArrayList<>();
+        mCriterionList = new ArrayList<>();
+        mGradeList = new ArrayList<>();
+        mGroupList = new ArrayList<>();
         parseJSON();
 
+        // Output in a logcat //
+        for (User u: mUserList)
+        {
+            Log.d(LOG_TAG, "USER: id = " + u.id +
+                    "email = " + u.email +
+                    "surname = " + u.surname +
+                    "name = " + u.name +
+                    "lastname = " + u.lastname);
+        }
         for (Teacher t: mTeacherList)
         {
             Log.d(LOG_TAG, "TEACHER: user = " + t.user);
         }
+        for (Subject s: mSubjectList)
+        {
+            Log.d(LOG_TAG, "SUBJECT: id = " + s.id +
+                    "name = " + s.name);
+        }
+        for (Teacher_Subject ts: mTeacherSubjectList)
+        {
+            Log.d(LOG_TAG, "TEACHER_SUBJECT: id = " + ts.id +
+                    "teacher = " + ts.teacherId +
+                    "subject = " + ts.subjectId);
+        }
+        for (Subject_Group sg: mSubjectGroupList)
+        {
+            Log.d(LOG_TAG, "SUBJECT_GROUP: id = " + sg.id +
+                    "subject = " + sg.subjectId +
+                    "group = " + sg.groupId);
+        }
+        for (Criterion s: mCriterionList)
+        {
+            Log.d(LOG_TAG, "Criterion: id = " + s.id +
+                    "name = " + s.name);
+        }
+        for (Grade g: mGradeList)
+        {
+            Log.d(LOG_TAG, "GRADE: id = " + g.id +
+                    "teacher_subject = " + g.teacher_subjectId +
+                    "criterion = " + g.criterionId +
+                    "grade = " + g.grade);
+        }
+        for (Group gp: mGroupList)
+        {
+            Log.d(LOG_TAG, "Group: id = " + gp.id +
+                    "name = " + gp.name);
+        }
+        // Output in a logcat //
     }
 
     private void parseJSON() {
         String[] urls = {
-                "teacher_list"
-//             "subject_list",
-//             "teacher_subj_list",
-//             "criterion_list",
-//             "subject_group_list",
-//             "grade_list",
-//             "group_list"
+                "user_list",
+                "teacher_list",
+                "subject_list",
+                "teacher_subj_list",
+                "subject_group_list",
+                "criterion_list",
+                "grade_list",
+                "group_list"
         };
 
         for (String url : urls) {
@@ -81,28 +133,56 @@ public class MainActivity extends AppCompatActivity {
                                     JSONObject json = response.getJSONObject(j);
 
                                     switch (url) {
+                                        case "user_list":
+                                            int userId = json.getInt("id");
+                                            String email = json.getString("email");
+                                            String surname = json.getString("surname");
+                                            String name = json.getString("name");
+                                            String lastname = json.getString("lastname");
+                                            mUserList.add(new User(userId, email, surname, name, lastname));
+                                            break;
                                         case "teacher_list":
                                             int user = json.getInt("user");
 
                                             mTeacherList.add(new Teacher(user));
                                             break;
                                         case "subject_list":
+                                            int subjId = json.getInt("id");
+                                            String subjName = json.getString("name");
 
+                                            mSubjectList.add(new Subject(subjId, subjName));
                                             break;
                                         case "teacher_subj_list":
-
-                                            break;
-                                        case "criterion_list":
-
+                                            int teacherSubjId = json.getInt("id");
+                                            int TSteacherId = json.getInt("teacher");
+                                            int TSsubjectId = json.getInt("subject");
+                                            mTeacherSubjectList.add(new Teacher_Subject(teacherSubjId, TSteacherId, TSsubjectId));
                                             break;
                                         case "subject_group_list":
+                                            int subjGroupId = json.getInt("id");
+                                            int SGsubjectId = json.getInt("subject");
+                                            int SGgroupId = json.getInt("group");
+                                            mSubjectGroupList.add(new Subject_Group(subjGroupId, SGsubjectId, SGgroupId));
+                                            break;
+                                        case "criterion_list":
+                                            int critId = json.getInt("id");
+                                            String critName = json.getString("name");
 
+                                            mCriterionList.add(new Criterion(critId, critName));
                                             break;
                                         case "grade_list":
+                                            int gradeId = json.getInt("id");
+                                            int gradeTSId = json.getInt("teacher_subject");
+                                            int gradeCriterionId = json.getInt("criterion");
+                                            int grade = json.getInt("grade");
 
+                                            mGradeList.add(new Grade(gradeId, gradeTSId, gradeCriterionId, grade));
                                             break;
                                         case "group_list":
+                                            int groupId = json.getInt("id");
+                                            String groupName = json.getString("name");
 
+                                            mGroupList.add(new Group(groupId, groupName));
                                             break;
                                         default:
                                             // error
