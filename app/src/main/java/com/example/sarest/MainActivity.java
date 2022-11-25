@@ -212,5 +212,20 @@ public class MainActivity extends AppCompatActivity {
                     });
             mRequestQueue.add(request);
         }
+
+        // тут будем собирать карточки
+        getCards();
+
+        // тут запихиваем карты в recycler view
+        Card[] cards = new Card[10];
+        for (int i = 0; i < 10; i++)
+            cards[i] = new Card("Тестовое имя", "Тестовый предмет", 3);
+
+
+
+    }
+
+    private void getCards() {
+
     }
 }
