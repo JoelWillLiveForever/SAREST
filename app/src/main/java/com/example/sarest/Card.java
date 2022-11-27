@@ -2,13 +2,13 @@ package com.example.sarest;
 
 public class Card {
     private String FIO = "";        // ФИО
-    private String Predmet = "";    // дисциплина
+    private String Subject = "";    // дисциплина
     private int score = 0;          // рейтинг
 
-    public Card(String FIO, String Predmet, int score)
+    public Card(String FIO, String Subject, int score)
     {
         this.FIO = FIO;
-        this.Predmet = Predmet;
+        this.Subject = Subject;
         this.score = score;
     }
 
@@ -20,12 +20,12 @@ public class Card {
         this.FIO = FIO;
     }
 
-    public String getPredmet() {
-        return Predmet;
+    public String getSubject() {
+        return Subject;
     }
 
-    public void setPredmet(String predmet) {
-        Predmet = predmet;
+    public void setSubject(String Subject) {
+        Subject = Subject;
     }
 
     public int getScore() {

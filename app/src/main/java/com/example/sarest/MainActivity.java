@@ -25,9 +25,8 @@ import com.example.sarest.API.models.*;
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = "SAREST_MAIN_ACTIVITY";
 
-//     private RecyclerView mRecyclerView;
-//     private ExampleAdapter mExampleAdapter;
-//     private ArrayList<ExampleItem> mExampleList;
+    private RecyclerView mRecyclerView;
+    private ExampleAdapter mExampleAdapter;
     private RequestQueue mRequestQueue;
 
     private ArrayList<Criterion> mCriterionList;
@@ -39,16 +38,13 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Teacher_Subject> mTeacherSubjectList;
     private ArrayList<User> mUserList;
 
+    private ArrayList<Card> mCardList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//         mRecyclerView = findViewById(R.id.recycler_view);
-//        mRecyclerView.setHasFixedSize(true);
-//         mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-
-//         mExampleList = new ArrayList<>();
         mRequestQueue = Volley.newRequestQueue(MainActivity.this);
 
         mUserList = new ArrayList<>();
@@ -60,6 +56,19 @@ public class MainActivity extends AppCompatActivity {
         mGradeList = new ArrayList<>();
         mGroupList = new ArrayList<>();
         parseJSON();
+
+        // тут будем собирать карточки
+        getCards();
+
+        //Log.d(LOG_TAG, "First card: " + mCardList.get(0).getFIO());
+
+        // Пихаем в recyclerView
+        mRecyclerView = findViewById(R.id.recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+
+        mExampleAdapter = new ExampleAdapter(MainActivity.this, mCardList);
+        mRecyclerView.setAdapter(mExampleAdapter);
 
         // Output in a logcat //
         for (User u: mUserList)
@@ -212,20 +221,47 @@ public class MainActivity extends AppCompatActivity {
                     });
             mRequestQueue.add(request);
         }
-
-        // тут будем собирать карточки
-        getCards();
-
-        // тут запихиваем карты в recycler view
-        Card[] cards = new Card[10];
-        for (int i = 0; i < 10; i++)
-            cards[i] = new Card("Тестовое имя", "Тестовый предмет", 3);
-
-
-
     }
 
-    private void getCards() {
-
+    protected void getCards() {
+        for (Subject_Group sg : mSubjectGroupList) {
+            for (Teacher_Subject ts : mTeacherSubjectList)
+            {
+                if (ts.subjectId == sg.subjectId)
+                {
+                    for (Criterion crit : mCriterionList)
+                    {
+                        for (Grade grade : mGradeList)
+                        {
+                            if (grade.teacher_subjectId == ts.id && grade.criterionId == crit.id)
+                            {
+                                for (User user : mUserList)
+                                {
+                                    if (ts.teacherId == user.id)
+                                    {
+                                        for(Subject s : mSubjectList)
+                                        {
+                                            if (s.id == ts.subjectId)
+                                            {
+                                                String FIO;
+                                                if (user.lastname != "")
+                                                {
+                                                    FIO = user.surname + user.name + user.lastname;
+                                                }
+                                                else
+                                                {
+                                                    FIO = user.surname + user.name;
+                                                }
+                                                mCardList.add(new Card(FIO, s.name, grade.grade));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
