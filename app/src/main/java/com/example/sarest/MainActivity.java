@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import com.example.sarest.API.models.*;
 
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = "SAREST_MAIN_ACTIVITY";
 
     private RecyclerView mRecyclerView;
-    private ExampleAdapter mExampleAdapter;
+    private CardsAdapter mCardsAdapter;
     private RequestQueue mRequestQueue;
 
     private ArrayList<Criterion> mCriterionList;
@@ -45,79 +46,85 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mRecyclerView = findViewById(R.id.recycler_view);
+//        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         mRequestQueue = Volley.newRequestQueue(MainActivity.this);
 
-        mUserList = new ArrayList<>();
-        mTeacherList = new ArrayList<>();
-        mSubjectList = new ArrayList<>();
-        mTeacherSubjectList = new ArrayList<>();
-        mSubjectGroupList = new ArrayList<>();
-        mCriterionList = new ArrayList<>();
-        mGradeList = new ArrayList<>();
-        mGroupList = new ArrayList<>();
+        mUserList = new ArrayList<User>();
+        mTeacherList = new ArrayList<Teacher>();
+        mSubjectList = new ArrayList<Subject>();
+        mTeacherSubjectList = new ArrayList<Teacher_Subject>();
+        mSubjectGroupList = new ArrayList<Subject_Group>();
+        mCriterionList = new ArrayList<Criterion>();
+        mGradeList = new ArrayList<Grade>();
+        mGroupList = new ArrayList<Group>();
+
+        mCardList = new ArrayList<>();
+
         parseJSON();
 
         // тут будем собирать карточки
         getCards();
 
-        //Log.d(LOG_TAG, "First card: " + mCardList.get(0).getFIO());
-
-        // Пихаем в recyclerView
-        mRecyclerView = findViewById(R.id.recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-
-        mExampleAdapter = new ExampleAdapter(MainActivity.this, mCardList);
-        mRecyclerView.setAdapter(mExampleAdapter);
+        mCardsAdapter = new CardsAdapter(MainActivity.this, mCardList);
+        mRecyclerView.setAdapter(mCardsAdapter);
 
         // Output in a logcat //
-        for (User u: mUserList)
-        {
-            Log.d(LOG_TAG, "USER: id = " + u.id +
-                    "email = " + u.email +
-                    "surname = " + u.surname +
-                    "name = " + u.name +
-                    "lastname = " + u.lastname);
-        }
-        for (Teacher t: mTeacherList)
-        {
-            Log.d(LOG_TAG, "TEACHER: user = " + t.user);
-        }
-        for (Subject s: mSubjectList)
-        {
-            Log.d(LOG_TAG, "SUBJECT: id = " + s.id +
-                    "name = " + s.name);
-        }
-        for (Teacher_Subject ts: mTeacherSubjectList)
-        {
-            Log.d(LOG_TAG, "TEACHER_SUBJECT: id = " + ts.id +
-                    "teacher = " + ts.teacherId +
-                    "subject = " + ts.subjectId);
-        }
-        for (Subject_Group sg: mSubjectGroupList)
-        {
-            Log.d(LOG_TAG, "SUBJECT_GROUP: id = " + sg.id +
-                    "subject = " + sg.subjectId +
-                    "group = " + sg.groupId);
-        }
-        for (Criterion s: mCriterionList)
-        {
-            Log.d(LOG_TAG, "Criterion: id = " + s.id +
-                    "name = " + s.name);
-        }
-        for (Grade g: mGradeList)
-        {
-            Log.d(LOG_TAG, "GRADE: id = " + g.id +
-                    "teacher_subject = " + g.teacher_subjectId +
-                    "criterion = " + g.criterionId +
-                    "grade = " + g.grade);
-        }
-        for (Group gp: mGroupList)
-        {
-            Log.d(LOG_TAG, "Group: id = " + gp.id +
-                    "name = " + gp.name);
-        }
+//        for (User u: mUserList)
+//        {
+//            Log.d(LOG_TAG, "USER: id = " + u.id +
+//                    "email = " + u.email +
+//                    "surname = " + u.surname +
+//                    "name = " + u.name +
+//                    "lastname = " + u.lastname);
+//        }
+//        for (Teacher t: mTeacherList)
+//        {
+//            Log.d(LOG_TAG, "TEACHER: user = " + t.user);
+//        }
+//        for (Subject s: mSubjectList)
+//        {
+//            Log.d(LOG_TAG, "SUBJECT: id = " + s.id +
+//                    "name = " + s.name);
+//        }
+//        for (Teacher_Subject ts: mTeacherSubjectList)
+//        {
+//            Log.d(LOG_TAG, "TEACHER_SUBJECT: id = " + ts.id +
+//                    "teacher = " + ts.teacherId +
+//                    "subject = " + ts.subjectId);
+//        }
+//        for (Subject_Group sg: mSubjectGroupList)
+//        {
+//            Log.d(LOG_TAG, "SUBJECT_GROUP: id = " + sg.id +
+//                    "subject = " + sg.subjectId +
+//                    "group = " + sg.groupId);
+//        }
+//        for (Criterion s: mCriterionList)
+//        {
+//            Log.d(LOG_TAG, "Criterion: id = " + s.id +
+//                    "name = " + s.name);
+//        }
+//        for (Grade g: mGradeList)
+//        {
+//            Log.d(LOG_TAG, "GRADE: id = " + g.id +
+//                    "teacher_subject = " + g.teacher_subjectId +
+//                    "criterion = " + g.criterionId +
+//                    "grade = " + g.grade);
+//        }
+//        for (Group gp: mGroupList)
+//        {
+//            Log.d(LOG_TAG, "Group: id = " + gp.id +
+//                    "name = " + gp.name);
+//        }
         // Output in a logcat //
+
+        for (Card my_card : mCardList)
+        {
+            Log.i(LOG_TAG, "CARD: FIO = " + my_card.getFIO() +
+                    "subject = " + my_card.getSubject() +
+                    "score = " + my_card.getScore());
+        }
     }
 
     private void parseJSON() {
@@ -206,8 +213,6 @@ public class MainActivity extends AppCompatActivity {
                                 //
                                 //                             mRecyclerView.setAdapter(mExampleAdapter);
                                 //                             Log.d(LOG_TAG, "RECYCLER ADAPTER = " + (mRecyclerView.getAdapter() == null ? "NULL" : "NOT NULL"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -224,44 +229,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void getCards() {
-        for (Subject_Group sg : mSubjectGroupList) {
-            for (Teacher_Subject ts : mTeacherSubjectList)
-            {
-                if (ts.subjectId == sg.subjectId)
-                {
-                    for (Criterion crit : mCriterionList)
-                    {
-                        for (Grade grade : mGradeList)
-                        {
-                            if (grade.teacher_subjectId == ts.id && grade.criterionId == crit.id)
-                            {
-                                for (User user : mUserList)
-                                {
-                                    if (ts.teacherId == user.id)
-                                    {
-                                        for(Subject s : mSubjectList)
-                                        {
-                                            if (s.id == ts.subjectId)
-                                            {
-                                                String FIO;
-                                                if (user.lastname != "")
-                                                {
-                                                    FIO = user.surname + user.name + user.lastname;
-                                                }
-                                                else
-                                                {
-                                                    FIO = user.surname + user.name;
-                                                }
-                                                mCardList.add(new Card(FIO, s.name, grade.grade));
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        // ФИО препода, дисциплина и рейтинг
+
+        for (int i = 0; i < 10; i++)
+        {
+            mCardList.add(new Card("Заебало", "Сука blyat", i));
         }
+
+//        for (Subject_Group sg : mSubjectGroupList) {
+//            for (Teacher_Subject ts : mTeacherSubjectList)
+//            {
+//                if (ts.subjectId == sg.subjectId)
+//                {
+//                    for (Criterion crit : mCriterionList)
+//                    {
+//                        for (Grade grade : mGradeList)
+//                        {
+//                            if (grade.teacher_subjectId == ts.id && grade.criterionId == crit.id)
+//                            {
+//                                for (User user : mUserList)
+//                                {
+//                                    if (ts.teacherId == user.id)
+//                                    {
+//                                        for(Subject s : mSubjectList)
+//                                        {
+//                                            if (s.id == ts.subjectId)
+//                                            {
+//                                                String FIO;
+//                                                if (!Objects.equals(user.lastname, ""))
+//                                                {
+//                                                    FIO = user.surname + user.name + user.lastname;
+//                                                }
+//                                                else
+//                                                {
+//                                                    FIO = user.surname + user.name;
+//                                                }
+//                                                mCardList.add(new Card(FIO, s.name, grade.grade));
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 }

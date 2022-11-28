@@ -1,40 +1,36 @@
 package com.example.sarest;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
-public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder> {
+public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsViewHolder> {
     private Context mContext;
-    private ArrayList<Card> mExampleList;
+    private ArrayList<Card> mCards;
 
-    public ExampleAdapter(Context context, ArrayList<Card> exampleList) {
+    public CardsAdapter(Context context, ArrayList<Card> mCards) {
         this.mContext = context;
-        this.mExampleList = exampleList;
+        this.mCards = mCards;
     }
 
     @NonNull
     @Override
-    public ExampleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.card_layout, parent, false);
+    public CardsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(mContext).inflate(R.layout.card_view, parent, false);
 //        Log.d("ADAPTER", "INFLATE" + (v == null ? "NULL" : "NOT NULL"));
-        return new ExampleViewHolder(v);
+        return new CardsViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ExampleViewHolder holder, int position) {
-        Card currentItem = mExampleList.get(position);
+    public void onBindViewHolder(@NonNull CardsViewHolder holder, int position) {
+        Card currentItem = mCards.get(position);
 
 //        String imageUrl = currentItem.getImageUrl();
 //        String creatorName = currentItem.getCreator();
@@ -52,17 +48,17 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
 
     @Override
     public int getItemCount() {
-        return mExampleList.size();
+        return mCards.size();
     }
 
-    public static class ExampleViewHolder extends RecyclerView.ViewHolder {
+    public static class CardsViewHolder extends RecyclerView.ViewHolder {
 //        public ImageView mImageView;
 //        public TextView mTextViewCreator;
         public TextView mFIO;
         public TextView mSubject;
         public TextView mScore;
 
-        public ExampleViewHolder(View itemView) {
+        public CardsViewHolder(View itemView) {
             super(itemView);
 
 //            mImageView = itemView.findViewById(R.id.image_view);
