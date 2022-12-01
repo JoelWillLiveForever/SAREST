@@ -9,13 +9,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsViewHolder> {
     private Context mContext;
-    private ArrayList<Card> mCards;
+    private List<Card> mCards;
 
-    public CardsAdapter(Context context, ArrayList<Card> mCards) {
+    public CardsAdapter(Context context, List<Card> mCards) {
         this.mContext = context;
         this.mCards = mCards;
     }
